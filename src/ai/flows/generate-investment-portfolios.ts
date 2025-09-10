@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { fundData } from '@/lib/fund-data';
 
 const InvestmentProfileInputSchema = z.object({
   investmentAmount: z.number().describe('The amount the user wants to invest.'),
@@ -49,6 +50,8 @@ export async function generateInvestmentPortfolios(
   return generateInvestmentPortfoliosFlow(input);
 }
 
+const fundNames = Object.values(fundData).map(fund => fund.name).join(', ');
+
 const prompt = ai.definePrompt({
   name: 'generateInvestmentPortfoliosPrompt',
   input: {schema: InvestmentProfileInputSchema},
@@ -58,6 +61,8 @@ const prompt = ai.definePrompt({
   Based on the user's investment profile, generate 4-5 diversified investment portfolios.
   Each portfolio should include a mix of mutual funds based on the user's asset allocation preferences.
   Consider the user's risk tolerance and investment period when creating the portfolios.
+
+  You must select funds from the following list: ${fundNames}.
 
   User Investment Profile:
   Investment Amount: {{{investmentAmount}}}
