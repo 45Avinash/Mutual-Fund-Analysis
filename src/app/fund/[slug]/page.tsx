@@ -17,8 +17,8 @@ export default function FundDetailPage({ params }: { params: { slug: string } })
 
   if (!fund) {
     return (
-        <div className="container mx-auto p-4 md:p-8 text-center">
-            <Card className="max-w-md mx-auto">
+        <div className="container mx-auto p-4 md:p-8 flex items-center justify-center min-h-[calc(100vh-theme(height.14))]">
+            <Card className="max-w-md mx-auto text-center">
                 <CardHeader>
                     <CardTitle className="font-headline text-2xl">Fund Not Found</CardTitle>
                     <CardDescription>
