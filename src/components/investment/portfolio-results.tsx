@@ -13,6 +13,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -27,7 +28,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { slugify } from "@/lib/utils";
 import Link from "next/link";
-import { AlertCircle, FileText } from "lucide-react";
+import { AlertCircle, FileText, Download } from "lucide-react";
+import { Button } from "../ui/button";
 
 type PortfolioResultsProps = {
   portfolios: InvestmentPortfoliosOutput | null;
@@ -67,6 +69,20 @@ export function PortfolioResults({
   isLoading,
   error,
 }: PortfolioResultsProps) {
+  const handleSave = () => {
+    if (!portfolios) return;
+    const dataStr = JSON.stringify(portfolios, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = 'portfolios.json';
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+
   if (isLoading) {
     return <SkeletonLoader />;
   }
@@ -145,6 +161,12 @@ export function PortfolioResults({
           ))}
         </Accordion>
       </CardContent>
+      <CardFooter>
+        <Button onClick={handleSave} variant="outline" size="sm">
+            <Download className="mr-2" />
+            Save Portfolios
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

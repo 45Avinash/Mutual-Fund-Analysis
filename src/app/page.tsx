@@ -9,6 +9,7 @@ import type {
 } from "@/ai/flows/generate-investment-portfolios";
 import { generateInvestmentPortfolios } from "@/ai/flows/generate-investment-portfolios";
 import { useToast } from "@/hooks/use-toast";
+import { Header } from "@/components/layout/header";
 
 export default function Home() {
   const [portfolios, setPortfolios] =
@@ -42,32 +43,45 @@ export default function Home() {
     }
   };
 
-  return (
-    <div className="container mx-auto p-4 md:p-8">
-      <div className="text-center mb-8 md:mb-12">
-        <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">
-          Welcome to FundForecaster
-        </h1>
-        <p className="text-muted-foreground mt-2 text-lg">
-          Your personalized AI-powered investment portfolio generator.
-        </p>
-      </div>
+  const handleImport = (importedPortfolios: InvestmentPortfoliosOutput) => {
+    setPortfolios(importedPortfolios);
+    setError(null);
+    setIsLoading(false);
+    toast({
+      title: 'Success',
+      description: 'Portfolios imported successfully.',
+    });
+  };
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-4">
-          <InvestmentProfileForm
-            onSubmit={handleFormSubmit}
-            isLoading={isLoading}
-          />
+  return (
+    <>
+      <Header onImport={handleImport} />
+      <div className="container mx-auto p-4 md:p-8">
+        <div className="text-center mb-8 md:mb-12">
+          <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">
+            Welcome to FundForecaster
+          </h1>
+          <p className="text-muted-foreground mt-2 text-lg">
+            Your personalized AI-powered investment portfolio generator.
+          </p>
         </div>
-        <div className="lg:col-span-8">
-          <PortfolioResults
-            portfolios={portfolios}
-            isLoading={isLoading}
-            error={error}
-          />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-4">
+            <InvestmentProfileForm
+              onSubmit={handleFormSubmit}
+              isLoading={isLoading}
+            />
+          </div>
+          <div className="lg:col-span-8">
+            <PortfolioResults
+              portfolios={portfolios}
+              isLoading={isLoading}
+              error={error}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
