@@ -1,3 +1,11 @@
+
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "fund-hero",
+      "description": "Abstract financial chart",
+      "imageUrl": "https://picsum.photos/seed/fund-hero/1200/400",
+      "imageHint": "finance chart"
+    }
+  ]
 }
