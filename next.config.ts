@@ -2,6 +2,7 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  basePath: '/Mutual-Fund-Analysis',
   output: 'export',
   typescript: {
     ignoreBuildErrors: true,
