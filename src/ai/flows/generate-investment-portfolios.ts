@@ -50,7 +50,19 @@ export async function generateInvestmentPortfolios(
   return generateInvestmentPortfoliosFlow(input);
 }
 
-const fundNames = Object.values(fundData).map(fund => fund.name).join(', ');
+const fundDetails = Object.values(fundData)
+  .map(
+    (fund) => `
+- Fund Name: ${fund.name}
+  Manager: ${fund.manager}
+  Strategy: ${fund.investmentStrategy.overview}
+  1Y Return: ${fund.investmentStrategy.oneYearReturn}
+  3Y Return: ${fund.investmentStrategy.threeYearReturn}
+  5Y Return: ${fund.investmentStrategy.fiveYearReturn}
+  Asset Classes: ${fund.assetAllocation.map((a) => a.name).join(', ')}
+`
+  )
+  .join('');
 
 const prompt = ai.definePrompt({
   name: 'generateInvestmentPortfoliosPrompt',
@@ -58,20 +70,24 @@ const prompt = ai.definePrompt({
   output: {schema: InvestmentPortfoliosOutputSchema},
   prompt: `You are a financial expert providing investment portfolio recommendations.
 
-  Based on the user's investment profile, generate 4-5 diversified investment portfolios.
+  Based on the user's investment profile, generate 3 diversified investment portfolios.
   Each portfolio should include a mix of mutual funds based on the user's asset allocation preferences.
-  Consider the user's risk tolerance and investment period when creating the portfolios.
+  Consider the user's risk tolerance, investment period, and expected return when creating the portfolios.
 
-  You must select funds from the following list: ${fundNames}.
+  Here is the list of available funds and their details:
+  ${fundDetails}
+
+  You MUST select funds from the list above. Do not invent funds.
+  The 'assetClass' in your response for each investment MUST be one of the asset classes associated with the chosen fund from the list above.
 
   User Investment Profile:
-  Investment Amount: {{{investmentAmount}}}
-  Expected Return: {{{expectedReturn}}}%
-  Risk Tolerance: {{{riskTolerance}}}
-  Investment Period: {{{investmentPeriod}}}
-  Asset Allocation Preferences: {{{assetAllocationPreferences}}}
+  - Investment Amount: {{{investmentAmount}}}
+  - Expected Annual Return: {{{expectedReturn}}}%
+  - Risk Tolerance: {{{riskTolerance}}}
+  - Investment Period: {{{investmentPeriod}}}
+  - Asset Allocation Preferences: {{{assetAllocationPreferences}}}
 
-  Ensure that the generated portfolios are well-diversified and aligned with the user's preferences.
+  Generate a unique description for each portfolio that explains the reasoning behind the fund selection and how it aligns with the user's profile. Ensure the generated portfolios are well-diversified and strictly aligned with the user's preferences.
 
   Output the portfolios in a JSON format.
   `,
